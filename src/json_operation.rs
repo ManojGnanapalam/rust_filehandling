@@ -1,19 +1,6 @@
-use serde::{Deserialize, Serialize};
+use serde_json::json;
 
-
-#[derive(Serialize, Deserialize)]
-struct Address {
-    street: String,
-    city: String
-}
-
-
-#[derive(Serialize, Deserialize)]
-struct Users {
-    name: String,
-    age: i32,
-    address: Address
-}
+use crate::use_struct::{Users,Address}; 
 
 pub fn json_handling() {
     let json = r#"
@@ -26,14 +13,30 @@ pub fn json_handling() {
     }
 }
 "#;
-    let parsed = read_json_typed(json);
+    let parsed = read_json(json);
 
     println!("Please send a letter to this address street {} , and city {}", parsed.address.street, parsed.address.city );
 }
 
 
-fn read_json_typed(raw_json: &str) -> Users {
+fn read_json(raw_json: &str) -> Users {
     let parsed: Users = serde_json::from_str(raw_json).unwrap();
     return parsed
     
+}
+
+pub fn write_json(){
+    let user = Users{
+        name: String::from("John Doe"),
+        age: 43,
+        address: Address {
+            street: "10 Downing Street".to_string(),
+            city: "London".to_string(),
+        },
+    };
+
+    let json = serde_json::to_string(&user).unwrap();
+
+    println!("{}", json);
+
 }
